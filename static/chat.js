@@ -69,14 +69,15 @@ form.addEventListener('submit', async (event) => {
   const question = input.value.trim();
   if (!question || button.disabled) return;
   button.disabled = true; form.setAttribute('aria-busy', 'true');
-  status.textContent = 'Finding evidence…';
+  const style = document.querySelector('#answer-style')?.value || 'excerpts';
+  status.textContent = style === 'ollama' ? 'Writing an AI answer from the evidence… this can take up to a minute.' : 'Finding evidence…';
   addMessage('You', question);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 120000);
   try {
     const response = await fetch('/ask', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({question, answer_style: document.querySelector('#answer-style')?.value || 'excerpts'}),
+      body: JSON.stringify({question, answer_style: style}),
       signal: controller.signal
     });
     if (!response.ok) {
@@ -91,3 +92,6 @@ form.addEventListener('submit', async (event) => {
     clearTimeout(timer); button.disabled = false; form.setAttribute('aria-busy', 'false'); input.focus();
   }
 });
+for (const example of document.querySelectorAll('.example')) {
+  example.addEventListener('click', () => { input.value = example.textContent; input.focus(); });
+}

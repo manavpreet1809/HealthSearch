@@ -4,6 +4,16 @@ A third-year university project that explores general health information through
 
 **Current status:** the local application works with source excerpts and live-tested Ollama synthesis. The corpus contains 15 diabetes/kidney-health articles and 201 chunks. All 92 evaluation questions remain unverified drafts. The original/challenge/supplementary sets match their expected answer/refusal categories, but this does not establish answer correctness. See the [final report](docs/REPORT.md), [results](docs/results/), and [completion scope](docs/STATUS.md).
 
+## Run with Docker
+
+The [Dockerfile](Dockerfile) packages the app, search model, corpus, and Qwen2.5 1.5B via Ollama for CPU-only hosts:
+
+```sh
+make docker && make docker-run   # http://127.0.0.1:7860
+```
+
+`make deploy SPACE=<hf-username>/wellquery` publishes it as a free [Hugging Face Docker Space](https://huggingface.co/docs/hub/spaces-sdks-docker) after `hf auth login`. AI answers take up to a minute on free CPU hardware; source excerpts are near-instant.
+
 ## Run the local demo
 
 Requires Python 3.12, [uv](https://docs.astral.sh/uv/), and `make`. Run from the repository root:

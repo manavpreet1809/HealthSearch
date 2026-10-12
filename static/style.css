@@ -29,3 +29,5 @@ th, td { padding: 12px; text-align: left; border-bottom: 1px solid #d9e5e1; }
 thead { background: #edf5f2; }
 meter { width: 70px; }
 dd { margin: 0 0 12px; overflow-wrap: anywhere; }
+#examples { color: #4f5d5a; }
+#examples .example { margin: 4px 4px 0 0; padding: 6px 12px; border: 1px solid #126557; background: transparent; color: #126557; font-size: 0.9rem; }

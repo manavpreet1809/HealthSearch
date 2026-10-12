@@ -30,7 +30,7 @@ BM25 provides lexical retrieval. A revision-pinned `all-MiniLM-L6-v2` encoder pr
 
 Source-excerpt mode returns verbatim sentences. It skips sentences disallowed by the conservative output rules instead of rejecting all remaining evidence. Equal-overlap sentences retain retrieval order. Synthesis mode uses Qwen2.5 1.5B through local Ollama: the model selects from short evidence sentences and emits claims with evidence IDs. The server maps IDs to immutable source quotes and validates them. Unknown IDs, incomplete output, invalid envelopes, unsupported quotations, and disallowed output are rejected. This proves attribution structure, not semantic entailment.
 
-Question text is processed locally in the local backend. There is no account system or persistent chat-history feature. The app is bound to localhost; it is not configured for public deployment. External document/model downloads occur during setup. The legacy remote backend remains separate and unverified.
+Question text is processed locally in the local backend. There is no account system or persistent chat-history feature. `make local` binds the app to localhost. A separate Docker image (`Dockerfile`, `deploy/`) runs the same local backend as a public demo, with Ollama reachable only inside the container and no stored questions; it has no rate limiting, so heavy use queues AI answers. External document/model downloads occur during setup. The legacy remote backend remains separate and unverified.
 
 ## Evaluation method
 
@@ -64,13 +64,13 @@ The live model was Qwen2.5 1.5B, digest `65ec06548149b04c096a120e4a6da9d4017ea80
 
 ## October 12 answer-quality update
 
-Live testing showed two answer defects. First, AI synthesis could repeat one claim against two sources, one of which did not support it. Repeated sentences are now offered to the model once, most relevant first, and repeated claims are dropped. Second, list questions such as "What are the symptoms of type 2 diabetes?" returned sentences about symptoms instead of the symptom list, sometimes from the type 1 article. The extractor now ends each bulleted list as its own sentence, sentence ranking favours listing sentences for list questions, and sentences that concern a different diabetes type than the question (by the sentence, or else its article title and section) are demoted.
+Live testing showed two answer defects. First, AI synthesis could repeat one claim against two sources, one of which did not support it. Repeated sentences are now offered to the model once, most relevant first, and repeated claims are dropped. Second, list questions such as "What are the symptoms of type 2 diabetes?" returned sentences about symptoms instead of the symptom list, sometimes from the type 1 article. The extractor now ends each bulleted list as its own sentence, sentence ranking favours listing sentences for list questions, and sentences that concern a different diabetes type than the question (by the sentence, or else its article title and section) are demoted. Sentences ending in a question mark, usually article sub-headings, are no longer offered as answers.
 
 All three evaluation sets were re-run after the change and the summaries in `docs/results/` replaced. Behaviour category matches remain 60/60, 20/20, and 12/12. Recall@5 is unchanged except supplementary vector retrieval (0.667 to 0.833), because chunk text changed. MRR@5 moved by at most 0.045 in either direction. These sets guided earlier development, so this is regression evidence, not an independent accuracy estimate.
 
 ## Validation and limitations
 
-113 automated tests pass locally, plus the real 201-chunk retrieval smoke check and the live synthesis probe. Tests cover ingestion, stale-index protection, ranking, boundaries, invalid citations, API failures, evaluation leakage checks, review integrity, dashboard parsing, and model transport. GitHub Actions runs the offline unit suite. A screenshot of live synthesis is included in `docs/images/live-synthesis.png`.
+114 automated tests pass locally, plus the real 201-chunk retrieval smoke check and the live synthesis probe. Tests cover ingestion, stale-index protection, ranking, boundaries, invalid citations, API failures, evaluation leakage checks, review integrity, dashboard parsing, and model transport. GitHub Actions runs the offline unit suite. A screenshot of live synthesis is included in `docs/images/live-synthesis.png`.
 
 Remaining limitations are substantive: rule-based boundaries cannot cover all language; negation handling is intentionally narrow; retrieval misses relevant sections; citations do not prove entailment; a small model may omit or distort facts; source updates may invalidate extraction; and no clinician or independent human review has been recorded. This release completes the local software demonstration, not clinical validation.
 

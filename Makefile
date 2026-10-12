@@ -34,3 +34,10 @@ model-pull:
 	$(OLLAMA_BIN) pull qwen2.5:1.5b
 compare:
 	$(PYTHON) -m evaluation.compare --output evaluation/results/comparison-$$(date -u +%Y%m%dT%H%M%SZ)
+.PHONY: docker docker-run deploy
+docker:
+	docker build -t wellquery .
+docker-run:
+	docker run --rm -p 7860:7860 wellquery
+deploy:
+	deploy/publish_space.sh $(SPACE)
