@@ -54,7 +54,7 @@ def request_claims(question: str, evidence: list[dict], post=None) -> dict:
     for rank, hit in enumerate(evidence):
         overlap = lambda s: (len(words & set(re.findall(r'\w+', s.lower())))
                              + relevance_adjustment(question, s, hit.get('context', '')))
-        sentences = [s for s in re.split(r'(?<=[.!?])\s+', hit['text']) if 15 <= len(s) <= 350]
+        sentences = [s for s in re.split(r'(?<=[.!?])\s+', hit['text']) if 15 <= len(s) <= 350 and not s.endswith('?')]
         sentences.sort(key=lambda s: -overlap(s))
         for sentence in sentences[:3]:
             # Overlapping chunks repeat sentences; offer each one once.

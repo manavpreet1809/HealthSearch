@@ -87,7 +87,8 @@ def answer_local(question: str, *, style: str = 'excerpts', database=DATABASE, e
         for rank, hit in enumerate(hits):
             for sentence in re.split(r'(?<=[.!?])\s+', hit['text']):
                 overlap = len(meaningful & (set(tokens(sentence)) - STOP))
-                if overlap and 15 <= len(sentence) <= 1200:
+                # Article headings such as 'What should I do?' are not answers.
+                if overlap and 15 <= len(sentence) <= 1200 and not sentence.endswith('?'):
                     candidate = dict(text=sentence, source_id=hit['chunk_id'], quote=sentence)
                     try:
                         validate_claims({'claims': [candidate]}, [hit])

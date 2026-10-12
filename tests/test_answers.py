@@ -70,3 +70,11 @@ def test_list_questions_prefer_listing_sentences_of_the_asked_type():
     assert adjust(q, 'Symptoms of type 1 diabetes include thirst; weight loss.') == -1
     assert adjust('What is metformin?', 'Symptoms include thirst; hunger.') == 0
     assert adjust(q, 'Common symptoms in children include thirst; hunger.', 'Type 1 Diabetes > Symptoms') == -1
+
+
+def test_excerpts_skip_questions_copied_from_articles(monkeypatch):
+    hit = dict(chunk_id='k:1', document_id='k', section_path='Kidneys', title='Kidneys', text=
+               'How can I keep my kidneys healthy? Keep your kidneys healthy by managing blood pressure.')
+    monkeypatch.setattr('app.answers.search_report', lambda *a, **k: {'hits': [hit], 'route': {'category': 'condition'}})
+    result = answer_local('How can I keep my kidneys healthy?')
+    assert result['answer'] == 'Keep your kidneys healthy by managing blood pressure. [1]'
