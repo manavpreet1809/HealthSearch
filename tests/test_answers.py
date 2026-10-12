@@ -78,3 +78,12 @@ def test_excerpts_skip_questions_copied_from_articles(monkeypatch):
     monkeypatch.setattr('app.answers.search_report', lambda *a, **k: {'hits': [hit], 'route': {'category': 'condition'}})
     result = answer_local('How can I keep my kidneys healthy?')
     assert result['answer'] == 'Keep your kidneys healthy by managing blood pressure. [1]'
+
+
+def test_filler_and_heading_sentences_are_not_answers():
+    from app.answers import usable_sentence
+    assert usable_sentence('Metformin helps your liver make less glucose.')
+    assert not usable_sentence('Learn more about the causes of type 2 diabetes.')
+    assert not usable_sentence('How often should I get my kidneys checked?')
+    assert not usable_sentence('The steps described below may help keep your kidneys healthy.')
+    assert usable_sentence('In addition to the symptoms listed above, some people have pain.')

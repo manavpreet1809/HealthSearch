@@ -1,6 +1,6 @@
 # Starter document catalogue
 
-`sources.json` contains 15 NIDDK text articles: diabetes and kidney-health information, including two medication-information pages. The October 7, 2026 ingestion produced 201 chunks. It meets the original minimum document count but is not a balanced or comprehensive clinical dataset. Original three-source evaluation runs remain historical results and are not comparable to expanded-corpus runs without controlling the corpus fingerprint.
+`sources.json` contains 15 NIDDK text articles: diabetes and kidney-health information, including two medication-information pages. The October 7, 2026 ingestion produced 201 chunks; the October 12 re-extraction, which keeps lists intact and closes link spacing, produces 199. It meets the original minimum document count but is not a balanced or comprehensive clinical dataset. Original three-source evaluation runs remain historical results and are not comparable to expanded-corpus runs without controlling the corpus fingerprint.
 
 The publisher's [copyright policy](https://www.niddk.nih.gov/copyright), checked October 2, 2026, allows reproduction of most site information with acknowledgement and exceptions for third-party content. The selected articles identify NIDDK as their source. The extractor excludes graphics, logos, tables, and surrounding navigation. This is an independent project, not endorsed by NIDDK; the content must not be used to imply endorsement or recommend specific medical advice. Review permissions again when adding sources.
 

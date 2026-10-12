@@ -3,7 +3,7 @@
 ## Implemented and verified
 
 - [x] Imported MediBot baseline with hashes and attribution.
-- [x] Local ingestion of 15 sources into 201 attributed chunks.
+- [x] Local ingestion of 15 sources into 199 attributed chunks.
 - [x] Keyword, vector, hybrid, and rule-routed search.
 - [x] Cited excerpts, evidence interface, and request/output boundaries.
 - [x] Fixes for observed challenge failures, with regression tests.

@@ -101,3 +101,9 @@ def test_bullet_lists_end_as_their_own_sentence(corpus):
             '<p>They develop slowly.</p><ul><li>Rest well.</li><li>Eat well.</li></ul></article>')
     assert extract_sections(html, source) == [('Symptoms', 'Symptoms include thirst; blurred vision.\n'
                                                            'They develop slowly.\nRest well. Eat well.')]
+
+
+def test_link_spacing_is_closed(corpus):
+    source = load_catalogue(corpus[0])[0]
+    html = '<article><p>Such as <a>skin infections</a> , or <a>yeast</a> . Kidney disease ( <a>CKD</a> ) matters.</p></article>'
+    assert extract_sections(html, source) == [('Fixture', 'Such as skin infections, or yeast. Kidney disease (CKD) matters.')]

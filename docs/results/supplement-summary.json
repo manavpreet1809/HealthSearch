@@ -1,10 +1,10 @@
 {
   "label": "DRAFT DEVELOPMENT RESULTS",
-  "created_at": "2026-10-12T11:27:29.499579+00:00",
+  "created_at": "2026-10-12T11:39:28.218852+00:00",
   "model": "sentence-transformers/all-MiniLM-L6-v2",
   "model_revision": "c9745ed1d9f207416be6d2e6f8de32d1f16199bf",
-  "corpus_sha256": "349a0978b36839230fcbd37d7409e870c7df1c5e02b8fef6415832c432235264",
-  "implementation_sha256": "899b89d908a1d08acf6aa622f6459e4f8e3f3c9a30c209cb4c5df7737f1c637a",
+  "corpus_sha256": "5f1d71ba517d357fd88d526ac6bf108723e9c907b6dce2b1ce3d35ce9865fd48",
+  "implementation_sha256": "bdaba291d7d6daa023520f72c923f5e52d3edc93e4e02d880bfb1c4a5def622f",
   "question_count": 12,
   "verified_question_count": 0,
   "configurations": {
@@ -12,25 +12,25 @@
       "n": 6,
       "recall_at_5": 0.5,
       "mrr_at_5": 0.2638888888888889,
-      "p95_ms": 4.4
+      "p95_ms": 4.39
     },
     "test/vector": {
       "n": 6,
       "recall_at_5": 0.8333333333333334,
       "mrr_at_5": 0.6166666666666667,
-      "p95_ms": 1877.18
+      "p95_ms": 1916.89
     },
     "test/hybrid": {
       "n": 6,
       "recall_at_5": 0.6666666666666666,
       "mrr_at_5": 0.4166666666666667,
-      "p95_ms": 18.23
+      "p95_ms": 27.1
     },
     "test/hybrid+routing": {
       "n": 6,
       "recall_at_5": 0.6666666666666666,
       "mrr_at_5": 0.4166666666666667,
-      "p95_ms": 17.95
+      "p95_ms": 23.0
     }
   },
   "limitations": [
@@ -39,7 +39,7 @@
     "First vector request may include model loading; timings are not controlled benchmarks.",
     "Results from this narrow corpus do not establish clinical safety."
   ],
-  "git_sha": "77b88c21303ac4a6a4ce13fc5326a990069b4a18",
+  "git_sha": "72bda9dd4d7d7ddd51501bf2992139352402e80d",
   "working_tree_dirty": true,
   "behaviour_checks": {
     "answer": {

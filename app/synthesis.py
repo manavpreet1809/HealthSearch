@@ -40,6 +40,9 @@ def model_status(get=None) -> dict:
         return dict(ready=False,reason='invalid_metadata',model=model,detail='Local Ollama returned invalid model metadata.')
 
 
+MAX_EVIDENCE = 8
+
+
 def request_claims(question: str, evidence: list[dict], post=None) -> dict:
     """Bound response generation and reject redirects or incomplete service output."""
     model=selected_model()
@@ -49,12 +52,12 @@ def request_claims(question: str, evidence: list[dict], post=None) -> dict:
     # Server-side mapping preserves quotes exactly; entailment still needs review.
     candidates = {}
     words = set(re.findall(r'\w+', question.lower()))
-    from app.answers import relevance_adjustment
+    from app.answers import relevance_adjustment, usable_sentence
     picked, seen = [], set()
     for rank, hit in enumerate(evidence):
         overlap = lambda s: (len(words & set(re.findall(r'\w+', s.lower())))
                              + relevance_adjustment(question, s, hit.get('context', '')))
-        sentences = [s for s in re.split(r'(?<=[.!?])\s+', hit['text']) if 15 <= len(s) <= 350 and not s.endswith('?')]
+        sentences = [s for s in re.split(r'(?<=[.!?])\s+', hit['text']) if 15 <= len(s) <= 350 and usable_sentence(s)]
         sentences.sort(key=lambda s: -overlap(s))
         for sentence in sentences[:3]:
             # Overlapping chunks repeat sentences; offer each one once.
@@ -62,8 +65,9 @@ def request_claims(question: str, evidence: list[dict], post=None) -> dict:
             if norm not in seen:
                 seen.add(norm)
                 picked.append((-overlap(sentence), rank, hit['chunk_id'], sentence))
-    # Most relevant sentences first, so a small model sees direct answers early.
-    for _, _, source_id, sentence in sorted(picked, key=lambda x: x[:2]):
+    # Most relevant sentences first, so a small model sees direct answers early;
+    # a shorter prompt also keeps CPU-only answers fast.
+    for _, _, source_id, sentence in sorted(picked, key=lambda x: x[:2])[:MAX_EVIDENCE]:
         candidates[f'E{len(candidates)+1}'] = dict(source_id=source_id, quote=sentence)
     if not candidates:
         return {'claims': []}

@@ -1,10 +1,10 @@
 {
   "label": "DRAFT DEVELOPMENT RESULTS",
-  "created_at": "2026-10-12T11:27:23.797111+00:00",
+  "created_at": "2026-10-12T11:39:22.413653+00:00",
   "model": "sentence-transformers/all-MiniLM-L6-v2",
   "model_revision": "c9745ed1d9f207416be6d2e6f8de32d1f16199bf",
-  "corpus_sha256": "349a0978b36839230fcbd37d7409e870c7df1c5e02b8fef6415832c432235264",
-  "implementation_sha256": "899b89d908a1d08acf6aa622f6459e4f8e3f3c9a30c209cb4c5df7737f1c637a",
+  "corpus_sha256": "5f1d71ba517d357fd88d526ac6bf108723e9c907b6dce2b1ce3d35ce9865fd48",
+  "implementation_sha256": "bdaba291d7d6daa023520f72c923f5e52d3edc93e4e02d880bfb1c4a5def622f",
   "question_count": 60,
   "verified_question_count": 0,
   "configurations": {
@@ -12,49 +12,49 @@
       "n": 26,
       "recall_at_5": 0.6153846153846154,
       "mrr_at_5": 0.3487179487179487,
-      "p95_ms": 4.25
+      "p95_ms": 4.49
     },
     "development/vector": {
       "n": 26,
       "recall_at_5": 0.9230769230769231,
-      "mrr_at_5": 0.6666666666666666,
-      "p95_ms": 20.06
+      "mrr_at_5": 0.6858974358974359,
+      "p95_ms": 21.7
     },
     "development/hybrid": {
       "n": 26,
       "recall_at_5": 0.9615384615384616,
-      "mrr_at_5": 0.6935897435897436,
-      "p95_ms": 17.67
+      "mrr_at_5": 0.717948717948718,
+      "p95_ms": 21.37
     },
     "development/hybrid+routing": {
       "n": 26,
-      "recall_at_5": 0.9230769230769231,
-      "mrr_at_5": 0.7051282051282052,
-      "p95_ms": 17.57
+      "recall_at_5": 0.9615384615384616,
+      "mrr_at_5": 0.7371794871794872,
+      "p95_ms": 20.26
     },
     "test/keyword": {
       "n": 14,
       "recall_at_5": 0.5714285714285714,
       "mrr_at_5": 0.39880952380952384,
-      "p95_ms": 4.46
+      "p95_ms": 5.68
     },
     "test/vector": {
       "n": 14,
       "recall_at_5": 0.8571428571428571,
       "mrr_at_5": 0.6726190476190477,
-      "p95_ms": 2150.09
+      "p95_ms": 2580.97
     },
     "test/hybrid": {
       "n": 14,
-      "recall_at_5": 1.0,
-      "mrr_at_5": 0.7166666666666667,
-      "p95_ms": 18.04
+      "recall_at_5": 0.9285714285714286,
+      "mrr_at_5": 0.7083333333333334,
+      "p95_ms": 19.71
     },
     "test/hybrid+routing": {
       "n": 14,
       "recall_at_5": 0.9285714285714286,
-      "mrr_at_5": 0.6607142857142857,
-      "p95_ms": 17.55
+      "mrr_at_5": 0.6726190476190477,
+      "p95_ms": 20.01
     }
   },
   "limitations": [
@@ -63,7 +63,7 @@
     "First vector request may include model loading; timings are not controlled benchmarks.",
     "Results from this narrow corpus do not establish clinical safety."
   ],
-  "git_sha": "77b88c21303ac4a6a4ce13fc5326a990069b4a18",
+  "git_sha": "72bda9dd4d7d7ddd51501bf2992139352402e80d",
   "working_tree_dirty": true,
   "behaviour_checks": {
     "answer": {

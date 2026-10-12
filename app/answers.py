@@ -10,6 +10,14 @@ LIST_QUESTION = re.compile(r'\b(what are|symptoms|signs|causes|types|risk factor
 LIST_SENTENCE = re.compile(r'\b(include|includes|including)\b[^.]*;', re.I)
 
 
+FILLER = re.compile(r'^(learn|read|find out) more\b|^see (also|the|our)\b|^(click|visit|watch) |\b(described|listed|shown) below\b', re.I)
+
+
+def usable_sentence(sentence: str) -> bool:
+    """Sub-headings ('What should I do?'), link text, and pointers to unseen text are not answers."""
+    return not sentence.endswith('?') and not FILLER.search(sentence)
+
+
 DIABETES_TYPE = re.compile(r'\btype\s*([12])\b', re.I)
 
 
@@ -87,8 +95,7 @@ def answer_local(question: str, *, style: str = 'excerpts', database=DATABASE, e
         for rank, hit in enumerate(hits):
             for sentence in re.split(r'(?<=[.!?])\s+', hit['text']):
                 overlap = len(meaningful & (set(tokens(sentence)) - STOP))
-                # Article headings such as 'What should I do?' are not answers.
-                if overlap and 15 <= len(sentence) <= 1200 and not sentence.endswith('?'):
+                if overlap and 15 <= len(sentence) <= 1200 and usable_sentence(sentence):
                     candidate = dict(text=sentence, source_id=hit['chunk_id'], quote=sentence)
                     try:
                         validate_claims({'claims': [candidate]}, [hit])

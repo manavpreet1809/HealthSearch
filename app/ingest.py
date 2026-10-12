@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import re
 import sqlite3
 import time
 from datetime import datetime, timezone
@@ -78,6 +79,8 @@ def extract_sections(raw: str, source: Source) -> list[tuple[str, str]]:
         if node.name == "li" and node.find_parent("li"):
             continue
         text = " ".join(node.get_text(" ", strip=True).split())
+        # Inline links leave "infections , or" and "( CKD )"; close those gaps.
+        text = re.sub(r"\s+([,.;:!?)])", r"\1", re.sub(r"\(\s+", "(", text))
         if not text:
             continue
         if node.name == "li":
@@ -184,7 +187,7 @@ def ingest(catalogue: Path, raw_dir: Path, database: Path, *, download: bool = F
             raise ValueError(f"No article text for {source.id}")
         metadata = source.model_dump(mode="json")
         metadata.update(retrieved_at=retrieved_at, content_sha256=raw_hash,
-                        chunk_max_words=max_words, chunk_overlap=overlap, parser_version=2)
+                        chunk_max_words=max_words, chunk_overlap=overlap, parser_version=3)
         fingerprint = hashlib.sha256(json.dumps(metadata, sort_keys=True).encode()).hexdigest()
         prepared.append((source, metadata, fingerprint, chunks))
     database.parent.mkdir(parents=True, exist_ok=True)
