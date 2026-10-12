@@ -1,4 +1,3 @@
-from threading import Lock
 from llm.prompt import SYSTEM_PROMPT
 from app.config import settings
 
@@ -8,14 +7,8 @@ MAX_NEW_TOKENS = settings.MAX_NEW_TOKENS
 
 _tokenizer = None # saved tokenizer
 _pipe = None # saved pipeline
-_model_lock = Lock()
 
 def load_model():
-    # FastAPI can serve simultaneous first requests; load weights only once.
-    with _model_lock:
-        _load_model_once()
-
-def _load_model_once():
     global _tokenizer, _pipe # use globals
 
     if _pipe is not None:

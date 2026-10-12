@@ -1,9 +1,8 @@
 PYTHON := .venv/bin/python
-LOCAL_PYTHON := .venv-local/bin/python
 .PHONY: setup test run local check ingest index evaluate doctor smoke
 setup:
-	test -x $(PYTHON) || uv venv --python 3.12 .venv
-	uv pip install --python $(PYTHON) -r requirements-llm.txt -r requirements-dev.txt
+	uv venv --python 3.12 .venv
+	uv pip install --python $(PYTHON) -r requirements-demo.lock
 test:
 	$(PYTHON) -m pytest -q
 check: test
@@ -11,22 +10,22 @@ check: test
 run:
 	$(PYTHON) -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 local:
-	BACKEND_MODE=local $(LOCAL_PYTHON) -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+	BACKEND_MODE=local $(PYTHON) -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ingest:
-	$(LOCAL_PYTHON) -m app.ingest --download
+	$(PYTHON) -m app.ingest --download
 index:
-	$(LOCAL_PYTHON) -m app.search --index --download-model
+	$(PYTHON) -m app.search --index --download-model
 evaluate:
-	$(LOCAL_PYTHON) -m evaluation.run --include-drafts
+	$(PYTHON) -m evaluation.run --include-drafts
 doctor:
-	$(PYTHON) -m app.remote_check
+	$(PYTHON) -m app.doctor
 smoke:
-	$(PYTHON) -m app.remote_check --live
+	$(PYTHON) -m app.doctor --smoke
 .PHONY: model-status model-smoke
 model-status:
-	$(LOCAL_PYTHON) -m app.synthesis
+	$(PYTHON) -m app.synthesis
 model-smoke:
-	$(LOCAL_PYTHON) -m app.synthesis --live
+	$(PYTHON) -m app.synthesis --live
 OLLAMA_BIN := $(if $(wildcard data/models/ollama-runtime/ollama),data/models/ollama-runtime/ollama,ollama)
 .PHONY: model-serve model-pull compare
 model-serve:
@@ -34,13 +33,4 @@ model-serve:
 model-pull:
 	$(OLLAMA_BIN) pull qwen2.5:1.5b
 compare:
-	$(LOCAL_PYTHON) -m evaluation.compare --output evaluation/results/comparison-$$(date -u +%Y%m%dT%H%M%SZ)
-
-.PHONY: setup-local local-doctor local-smoke
-setup-local:
-	test -x $(LOCAL_PYTHON) || uv venv --python 3.12 .venv-local
-	uv pip install --python $(LOCAL_PYTHON) -r requirements-demo.lock
-local-doctor:
-	$(LOCAL_PYTHON) -m app.doctor
-local-smoke:
-	$(LOCAL_PYTHON) -m app.doctor --smoke
+	$(PYTHON) -m evaluation.compare --output evaluation/results/comparison-$$(date -u +%Y%m%dT%H%M%SZ)
