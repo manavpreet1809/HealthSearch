@@ -60,3 +60,13 @@ def test_repeated_model_claims_shown_once(db):
         return {'claims':[claim,dict(claim,text=' same  FACT. ')]}
     result=answer_local('glucose',style='ollama',database=db,embed=embed,generate=model)
     assert not result['refused'] and len(result['claims'])==1 and result['answer'].count('Same fact.')==1
+
+
+def test_list_questions_prefer_listing_sentences_of_the_asked_type():
+    from app.answers import relevance_adjustment as adjust
+    q = 'What are the symptoms of type 2 diabetes?'
+    assert adjust(q, 'Symptoms of diabetes include thirst; hunger; blurred vision.') == 3
+    assert adjust(q, 'Symptoms develop slowly.') == 0
+    assert adjust(q, 'Symptoms of type 1 diabetes include thirst; weight loss.') == -1
+    assert adjust('What is metformin?', 'Symptoms include thirst; hunger.') == 0
+    assert adjust(q, 'Common symptoms in children include thirst; hunger.', 'Type 1 Diabetes > Symptoms') == -1

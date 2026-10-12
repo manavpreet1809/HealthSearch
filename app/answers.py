@@ -6,6 +6,27 @@ from app.search import DATABASE, search_report, tokens
 from app.boundaries import guard, PERSONAL, INJECTION
 
 STOP = set('a an the what is are of to for how why do does can in and or me about tell explain'.split())
+LIST_QUESTION = re.compile(r'\b(what are|symptoms|signs|causes|types|risk factors|side effects|treatments)\b', re.I)
+LIST_SENTENCE = re.compile(r'\b(include|includes|including)\b[^.]*;', re.I)
+
+
+DIABETES_TYPE = re.compile(r'\btype\s*([12])\b', re.I)
+
+
+def relevance_adjustment(question: str, sentence: str, context: str = '') -> int:
+    """Prefer list sentences for list questions; demote the wrong diabetes type.
+
+    A sentence that names no type inherits it from its article title and section."""
+    score = 3 if LIST_QUESTION.search(question) and LIST_SENTENCE.search(sentence) else 0
+    asked = set(DIABETES_TYPE.findall(question))
+    mentioned = set(DIABETES_TYPE.findall(sentence)) or set(DIABETES_TYPE.findall(context))
+    if asked and mentioned and not asked & mentioned:
+        score -= 4  # e.g. type 1 symptoms offered for a type 2 question
+    return score
+
+
+def context(hit: dict) -> str:
+    return f"{hit.get('title', '')} > {hit.get('section_path', '')}"
 
 
 def ollama_claims(question: str, evidence: list[dict]) -> dict:
@@ -72,7 +93,7 @@ def answer_local(question: str, *, style: str = 'excerpts', database=DATABASE, e
                         validate_claims({'claims': [candidate]}, [hit])
                     except ValueError:
                         continue
-                    ranked.append((overlap, rank, hit['chunk_id'], sentence))
+                    ranked.append((overlap + relevance_adjustment(question, sentence, context(hit)), rank, hit['chunk_id'], sentence))
         ranked.sort(key=lambda x: (-x[0], x[1]))
         claims = []
         seen = set()
@@ -84,7 +105,7 @@ def answer_local(question: str, *, style: str = 'excerpts', database=DATABASE, e
                 break
         payload = {'claims': claims}
     else:
-        payload = (generate or ollama_claims)(question, [dict(chunk_id=h['chunk_id'], text=h['text']) for h in hits])
+        payload = (generate or ollama_claims)(question, [dict(chunk_id=h['chunk_id'], text=h['text'], context=context(h)) for h in hits])
     try:
         claims = validate_claims(payload, hits)
         # A model may restate one claim against several sources; keep the first.

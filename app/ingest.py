@@ -54,7 +54,24 @@ def extract_sections(raw: str, source: Source) -> list[tuple[str, str]]:
     sections = []
     headings: dict[int, str] = {}
     paragraphs: list[str] = []
+    items: list[str] = []
     heading = source.title
+
+    def flush_list():
+        # Chunking drops line breaks, so give each list its own sentence boundary
+        # instead of letting bullets run into the next paragraph.
+        if not items:
+            return
+        if all(i[-1] in ".!?" for i in items):
+            text = " ".join(items)
+        else:
+            text = "; ".join(i.rstrip(";,.") for i in items) + "."
+        if paragraphs and paragraphs[-1][-1] not in ".!?":
+            paragraphs[-1] += " " + text  # "Symptoms include" + its bullets
+        else:
+            paragraphs.append(text)
+        items.clear()
+
     for node in article.find_all(["h1", "h2", "h3", "h4", "p", "li"]):
         if node.name == "p" and node.find_parent("li"):
             continue
@@ -63,6 +80,10 @@ def extract_sections(raw: str, source: Source) -> list[tuple[str, str]]:
         text = " ".join(node.get_text(" ", strip=True).split())
         if not text:
             continue
+        if node.name == "li":
+            items.append(text)
+            continue
+        flush_list()
         if node.name.startswith("h"):
             if paragraphs:
                 sections.append((heading, "\n".join(paragraphs)))
@@ -73,6 +94,7 @@ def extract_sections(raw: str, source: Source) -> list[tuple[str, str]]:
             heading = " > ".join(headings.values())
         else:
             paragraphs.append(text)
+    flush_list()
     if paragraphs:
         sections.append((heading, "\n".join(paragraphs)))
     return sections
@@ -162,7 +184,7 @@ def ingest(catalogue: Path, raw_dir: Path, database: Path, *, download: bool = F
             raise ValueError(f"No article text for {source.id}")
         metadata = source.model_dump(mode="json")
         metadata.update(retrieved_at=retrieved_at, content_sha256=raw_hash,
-                        chunk_max_words=max_words, chunk_overlap=overlap, parser_version=1)
+                        chunk_max_words=max_words, chunk_overlap=overlap, parser_version=2)
         fingerprint = hashlib.sha256(json.dumps(metadata, sort_keys=True).encode()).hexdigest()
         prepared.append((source, metadata, fingerprint, chunks))
     database.parent.mkdir(parents=True, exist_ok=True)

@@ -93,3 +93,11 @@ def test_robots_denial_prevents_article_download(corpus, monkeypatch):
 def test_receipt_tampering_rejected(corpus):
     (corpus[1] / 'fixture.receipt.json').write_text(json.dumps({'sha256': 'wrong', 'url': 'https://example.com/fixture'}))
     with pytest.raises(ValueError, match='mismatch'): ingest(*corpus)
+
+
+def test_bullet_lists_end_as_their_own_sentence(corpus):
+    source = load_catalogue(corpus[0])[0]
+    html = ('<article><h2>Symptoms</h2><p>Symptoms include</p><ul><li>thirst</li><li>blurred vision,</li></ul>'
+            '<p>They develop slowly.</p><ul><li>Rest well.</li><li>Eat well.</li></ul></article>')
+    assert extract_sections(html, source) == [('Symptoms', 'Symptoms include thirst; blurred vision.\n'
+                                                           'They develop slowly.\nRest well. Eat well.')]

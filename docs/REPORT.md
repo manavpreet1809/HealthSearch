@@ -1,6 +1,6 @@
 # WellQuery: extending MediBot with inspectable local retrieval
 
-**Author:** Manavpreet Singh · **Release evidence:** October 7, 2026
+**Author:** Manavpreet Singh · **Release evidence:** October 7, 2026 · **Results updated:** October 12, 2026
 
 ## Objective and scope
 
@@ -24,7 +24,7 @@ The original Databricks deployment was not reproduced. Architectural improvement
 
 ## Implementation
 
-Fifteen approved catalogue entries are downloaded with robots checks, cache receipts, hashes, size limits, and section-aware extraction. Media and navigation are excluded. The resulting 201 chunks retain publisher, title, URL, section, and source terms. Ingestion is transactional and repeat runs avoid unchanged document writes.
+Fifteen approved catalogue entries are downloaded with robots checks, cache receipts, hashes, size limits, and section-aware extraction. Media and navigation are excluded. The resulting 201 chunks retain publisher, title, URL, section, and source terms. Ingestion is transactional and repeat runs avoid unchanged document writes. Bulleted lists are kept as one sentence ending at the list, so a list such as symptoms does not run into the following paragraph.
 
 BM25 provides lexical retrieval. A revision-pinned `all-MiniLM-L6-v2` encoder provides normalized vectors; exact cosine scanning is appropriate for this small corpus. Reciprocal-rank fusion combines ranks without treating lexical and cosine scores as comparable. Rule routing is an inspectable experimental baseline, not a trained medical classifier. SQLite keeps setup small at the cost of large-scale throughput.
 
@@ -50,7 +50,7 @@ Recall@5 measures whether labeled document sections appear among the first five 
 
 The earlier challenge run had 6 behavior mismatches. The initial expanded-corpus rerun also found a coding request answered from unrelated medicine text and a lab-value sentence causing whole-answer rejection. Tests now cover these failure mechanisms.
 
-Retrieval is less complete than the behavior counts suggest. On the supplementary set's six factual questions, keyword Recall@5 was 0.50 and vector, hybrid, and routed hybrid were 0.667. The labeled section was missed in two questions even though an answer was returned. On the original draft test subset, unrestricted hybrid achieved Recall@5 1.0 versus 0.929 with routing. Routing is therefore not claimed as a universal improvement. Draft route labels also produce mismatches and need human review.
+Retrieval is less complete than the behavior counts suggest. On the supplementary set's six factual questions, keyword Recall@5 was 0.50, vector 0.833, and hybrid and routed hybrid 0.667. Hybrid missed the labeled section in two questions even though an answer was returned. On the original draft test subset, unrestricted hybrid achieved Recall@5 1.0 versus 0.929 with routing. Routing is therefore not claimed as a universal improvement. Draft route labels also produce mismatches and need human review.
 
 Machine-readable summaries, per-configuration retrieval rows, and failure events are checked into `docs/results/`. Full local answer-review exports remain under ignored `evaluation/results/`. Source/code/model/dataset hashes accompany evaluation runs; their dirty-tree flag records execution before the release commit.
 
@@ -62,9 +62,15 @@ The final run produced three accepted, cited WellQuery synthesis answers and two
 
 The live model was Qwen2.5 1.5B, digest `65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b`, served by Ollama 0.40.0 on Apple Silicon. The downloaded runtime matched its published GitHub asset SHA-256. The browser test generated an answer, opened a citation, and displayed the exact source passage.
 
+## October 12 answer-quality update
+
+Live testing showed two answer defects. First, AI synthesis could repeat one claim against two sources, one of which did not support it. Repeated sentences are now offered to the model once, most relevant first, and repeated claims are dropped. Second, list questions such as "What are the symptoms of type 2 diabetes?" returned sentences about symptoms instead of the symptom list, sometimes from the type 1 article. The extractor now ends each bulleted list as its own sentence, sentence ranking favours listing sentences for list questions, and sentences that concern a different diabetes type than the question (by the sentence, or else its article title and section) are demoted.
+
+All three evaluation sets were re-run after the change and the summaries in `docs/results/` replaced. Behaviour category matches remain 60/60, 20/20, and 12/12. Recall@5 is unchanged except supplementary vector retrieval (0.667 to 0.833), because chunk text changed. MRR@5 moved by at most 0.045 in either direction. These sets guided earlier development, so this is regression evidence, not an independent accuracy estimate.
+
 ## Validation and limitations
 
-109 automated tests pass locally, plus the real 201-chunk retrieval smoke check and the live synthesis probe. Tests cover ingestion, stale-index protection, ranking, boundaries, invalid citations, API failures, evaluation leakage checks, review integrity, dashboard parsing, and model transport. GitHub Actions runs the offline unit suite. A screenshot of live synthesis is included in `docs/images/live-synthesis.png`.
+113 automated tests pass locally, plus the real 201-chunk retrieval smoke check and the live synthesis probe. Tests cover ingestion, stale-index protection, ranking, boundaries, invalid citations, API failures, evaluation leakage checks, review integrity, dashboard parsing, and model transport. GitHub Actions runs the offline unit suite. A screenshot of live synthesis is included in `docs/images/live-synthesis.png`.
 
 Remaining limitations are substantive: rule-based boundaries cannot cover all language; negation handling is intentionally narrow; retrieval misses relevant sections; citations do not prove entailment; a small model may omit or distort facts; source updates may invalidate extraction; and no clinician or independent human review has been recorded. This release completes the local software demonstration, not clinical validation.
 
