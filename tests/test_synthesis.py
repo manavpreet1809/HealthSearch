@@ -77,3 +77,15 @@ def test_evidence_ids_map_to_exact_server_quotes():
     payload['message']['content']=json.dumps({'claims':[{'text':'Fact','evidence_id':'invented'}]})
     with pytest.raises(ValueError,match='Unknown evidence'):
         request_claims('question',[dict(chunk_id='source',text='An exact supporting sentence.')],lambda *a,**k:response(payload))
+
+
+def test_repeated_sentences_offered_once_most_relevant_first():
+    sent=[]
+    def post(url,**kwargs):
+        sent.append(json.loads(kwargs['json']['messages'][1]['content'])['evidence'])
+        return response({'done':True,'message':{'content':json.dumps({'claims':[]})}})
+    request_claims('kidney symptoms',[dict(chunk_id='a',text='Unrelated opening sentence here. Kidney damage is common.'),
+                                      dict(chunk_id='b',text='Kidney symptoms include swelling and fatigue. Kidney damage is common.')],post)
+    texts=[e['text'] for e in sent[0]]
+    assert texts[0]=='Kidney symptoms include swelling and fatigue.'
+    assert texts.count('Kidney damage is common.')==1

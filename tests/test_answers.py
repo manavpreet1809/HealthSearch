@@ -51,3 +51,12 @@ def test_excerpts_skip_blocked_sentence_without_losing_other_evidence(monkeypatc
 
 def test_coding_request_with_health_overlap_precedes_search(tmp_path):
     assert answer_local('Write a sorting algorithm for diabetes data',database=tmp_path/'absent')['refusal_reason']=='insufficient_evidence'
+
+
+def test_repeated_model_claims_shown_once(db):
+    build_index(db,embed)
+    def model(q,hits):
+        claim=dict(text='Same fact.',source_id=hits[0]['chunk_id'],quote=hits[0]['text'])
+        return {'claims':[claim,dict(claim,text=' same  FACT. ')]}
+    result=answer_local('glucose',style='ollama',database=db,embed=embed,generate=model)
+    assert not result['refused'] and len(result['claims'])==1 and result['answer'].count('Same fact.')==1

@@ -87,6 +87,14 @@ def answer_local(question: str, *, style: str = 'excerpts', database=DATABASE, e
         payload = (generate or ollama_claims)(question, [dict(chunk_id=h['chunk_id'], text=h['text']) for h in hits])
     try:
         claims = validate_claims(payload, hits)
+        # A model may restate one claim against several sources; keep the first.
+        unique, seen = [], set()
+        for claim in claims:
+            norm = ' '.join(claim['text'].lower().split())
+            if norm not in seen:
+                seen.add(norm)
+                unique.append(claim)
+        claims = unique
     except (ValueError, TypeError):
         result['answer'] = 'I could not produce an answer with valid supporting evidence.'
         return finish('invalid_output')
