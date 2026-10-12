@@ -5,6 +5,8 @@ from pathlib import Path
 import re
 
 RESULTS = Path(__file__).resolve().parents[1] / 'evaluation/results'
+# Checked-in summaries (<name>-summary.json), shown when there are no local runs, e.g. the public demo.
+PUBLISHED = Path(__file__).resolve().parents[1] / 'docs/results'
 
 
 def valid_rate(value):
@@ -17,16 +19,23 @@ def load_runs(root: Path = RESULTS) -> tuple[list[dict], int]:
     runs, skipped = [], 0
     if not root.exists():
         return runs, skipped
-    for directory in sorted(root.iterdir(), reverse=True)[:100]:
-        path = directory / 'summary.json'
-        if directory.is_symlink() or not directory.is_dir() or not re.fullmatch(r'[A-Za-z0-9_-]+', directory.name):
+    candidates = []
+    for entry in sorted(root.iterdir(), reverse=True)[:100]:
+        if entry.is_symlink():
             continue
+        if entry.is_dir() and re.fullmatch(r'[A-Za-z0-9_-]+', entry.name):
+            candidates.append((entry.name, entry / 'summary.json', True))
+        elif match := re.fullmatch(r'([A-Za-z0-9_-]+)-summary\.json', entry.name):
+            candidates.append((match[1], entry, False))
+    for run_id, path, required in candidates:
         if path.is_symlink() or not path.is_file():
             continue
         try:
             if path.stat().st_size > 1_000_000:
                 raise ValueError('Oversized summary')
             data = json.loads(path.read_text())
+            if not required and 'configurations' not in data:
+                continue  # another kind of summary, e.g. the prompt comparison
             total, verified = data['question_count'], data['verified_question_count']
             if type(total) is not int or type(verified) is not int or not 0 <= verified <= total or total == 0:
                 raise ValueError('Invalid counts')
@@ -44,7 +53,7 @@ def load_runs(root: Path = RESULTS) -> tuple[list[dict], int]:
                 if not valid_rate(item['match_rate']) or type(item['n']) is not int or item['n'] < 1:
                     raise ValueError('Invalid behaviour metrics')
                 behaviours.append(dict(name=name, **item))
-            runs.append(dict(id=directory.name, question_count=total, verified_count=verified,
+            runs.append(dict(id=run_id, question_count=total, verified_count=verified,
                              draft=verified < total, created_at=data.get('created_at','Unknown'),
                              metrics=metrics, behaviours=behaviours, model=data.get('model','Unknown'),
                              git_sha=data.get('git_sha','Unknown'), corpus_sha256=data.get('corpus_sha256','Unknown'),

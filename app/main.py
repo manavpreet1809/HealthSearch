@@ -65,8 +65,11 @@ def create_app(mode: str | None = None, client=None, generate=None, search_datab
 
     @application.get("/evaluation", response_class=HTMLResponse)
     def evaluation_page(request: Request, run: str | None = Query(default=None, max_length=100)):
-        from app.dashboard import RESULTS, load_runs
+        from app.dashboard import PUBLISHED, RESULTS, load_runs
         runs, skipped = load_runs(evaluation_root if evaluation_root is not None else RESULTS)
+        if not runs and evaluation_root is None:
+            runs, skipped = load_runs(PUBLISHED)
+            runs.sort(key=lambda run: run['id'] != 'original')  # open on the main 60-question set
         selected = next((item for item in runs if item['id'] == run), None) if run else (runs[0] if runs else None)
         if run and selected is None:
             raise HTTPException(404, "Evaluation run not found")

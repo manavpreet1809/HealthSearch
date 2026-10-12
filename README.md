@@ -2,7 +2,13 @@
 
 A third-year university project that explores general health information through document search, cited source excerpts, and inspectable evidence. Built by Manavpreet Singh on his earlier MediBot project.
 
-**Current status:** the local application works with source excerpts and live-tested Ollama synthesis. The corpus contains 15 diabetes/kidney-health articles and 201 chunks. All 92 evaluation questions remain unverified drafts. The original/challenge/supplementary sets match their expected answer/refusal categories, but this does not establish answer correctness. See the [final report](docs/REPORT.md), [results](docs/results/), and [completion scope](docs/STATUS.md).
+**Current status:** the local application works with source excerpts and live-tested Ollama synthesis. The corpus contains 15 diabetes/kidney-health articles and 199 chunks. All 92 evaluation questions remain unverified drafts. The original/challenge/supplementary sets match their expected answer/refusal categories, but this does not establish answer correctness. See the [final report](docs/REPORT.md), [results](docs/results/), and [completion scope](docs/STATUS.md).
+
+<p align="center"><img src="docs/images/quick-answer.png" alt="WellQuery answering 'What are the symptoms of type 2 diabetes?' with a bulleted list and its NIDDK sources" width="640"></p>
+
+| Emergency questions are refused | Works on phones |
+|---|---|
+| <img src="docs/images/emergency.png" alt="An emergency question gets a red 'This may be an emergency' notice" width="400"> | <img src="docs/images/phone.png" alt="WellQuery on a phone-sized screen" width="200"> |
 
 ## Run with Docker
 
@@ -41,7 +47,7 @@ Initial setup needs internet access for dependencies, articles, and model weight
 - Compares retrieval configurations and exports answers for separate human review.
 - Displays evaluation runs with explicit draft/verified-question counts and limitations.
 
-![Draft evaluation dashboard](docs/images/evaluation.jpg)
+![Draft evaluation dashboard](docs/images/evaluation.png)
 
 ## Commands
 

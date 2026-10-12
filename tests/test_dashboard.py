@@ -36,3 +36,9 @@ def test_symlink_summary_ignored(tmp_path):
     directory=tmp_path/'run1';directory.mkdir()
     (directory/'summary.json').symlink_to(outside)
     assert load_runs(tmp_path)==([],0)
+
+
+def test_published_flat_summaries_load():
+    from app.dashboard import PUBLISHED
+    runs, skipped = load_runs(PUBLISHED)
+    assert skipped == 0 and {r['id'] for r in runs} == {'original', 'challenge', 'supplement'}

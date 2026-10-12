@@ -1,12 +1,29 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WellQuery</title><link rel="stylesheet" href="{{ request.url_for('static', path='style.css') }}"></head>
-<body><main><nav><a href="/evaluation">Evaluation results</a></nav><h1>WellQuery</h1><p>Explore information. Check the evidence.</p>
-<p class="notice">Student prototype. General information only; not medical advice. Do not enter personal health details. For an emergency, contact local emergency services.</p>
-<p id="mode">Mode: {{ mode }}.{% if mode == 'demo' %} Scripted demo — try “What is WellQuery?”. No health information or AI generation is active.{% elif mode == 'local' %} Local evidence answers. Excerpts are direct source text; optional AI synthesis requires Ollama.{% else %} Requires configured Databricks endpoints and a local model.{% endif %}</p>
-{% if mode == 'local' %}<p id="examples">Try: <button type="button" class="example">What are the symptoms of type 2 diabetes?</button> <button type="button" class="example">What is metformin used for?</button> <button type="button" class="example">What causes type 2 diabetes?</button></p>{% endif %}
-<section id="messages" role="log" aria-live="polite" aria-label="Conversation"></section>
-<form id="question-form"><label for="question">Your question</label><textarea id="question" maxlength="1000" required rows="3"></textarea>
-{% if mode == 'local' %}<label for="answer-style">Answer style</label><select id="answer-style"><option value="excerpts">Source excerpts (no generation)</option><option value="ollama">AI synthesis (slower; requires Ollama)</option></select>{% endif %}
-<button type="submit">Ask WellQuery</button><p id="status" role="status"></p></form>
+<title>WellQuery</title>
+<meta name="description" content="Ask about diabetes and kidney health. Every answer shows the NIDDK source behind it.">
+<link rel="stylesheet" href="{{ request.url_for('static', path='style.css') }}"></head>
+<body><main>
+<header class="hero">
+  <nav><a href="/evaluation">How well it works</a></nav>
+  <h1>WellQuery</h1>
+  <p class="tagline">Answers about diabetes and kidney health, with the source behind every sentence.</p>
+  <ul class="coverage" aria-label="What WellQuery covers"><li>Diabetes</li><li>Kidney health</li><li>Diabetes medicines</li><li>15 NIDDK articles</li></ul>
+</header>
+<p class="notice">General information only, not medical advice. In an emergency, call your local emergency number.</p>
+{% if mode != 'local' %}<p id="mode">Mode: {{ mode }}.{% if mode == 'demo' %} Scripted demo — try “What is WellQuery?”. No health information or AI generation is active.{% else %} Requires configured Databricks endpoints and a local model.{% endif %}</p>{% endif %}
+<form id="question-form" class="ask">
+  <label for="question">Your question</label>
+  <textarea id="question" maxlength="1000" required rows="2" placeholder="e.g. What are the symptoms of type 2 diabetes?"></textarea>
+  {% if mode == 'local' %}<fieldset class="styles"><legend>Answer style</legend>
+    <label class="style-option"><input type="radio" name="answer-style" value="excerpts" checked><span><strong>Quick answer</strong><small>Exact sentences from the sources · instant</small></span></label>
+    <label class="style-option"><input type="radio" name="answer-style" value="ollama"><span><strong>AI summary</strong><small>Written by a small AI model · up to 1 minute</small></span></label>
+  </fieldset>{% endif %}
+  <button type="submit">Ask WellQuery</button>
+  <p id="status" role="status"></p>
+</form>
+{% if mode == 'local' %}<div id="examples"><span>Try:</span> <button type="button" class="example">What are the symptoms of type 2 diabetes?</button> <button type="button" class="example">What is metformin used for?</button> <button type="button" class="example">What causes type 2 diabetes?</button> <button type="button" class="example">How can I keep my kidneys healthy?</button></div>{% endif %}
+<section id="messages" aria-live="polite" aria-label="Answers"></section>
+<footer>Built by Manavpreet Singh · <a href="https://github.com/manavpreet1809/WellQuery">Source code on GitHub</a> · <a href="/evaluation">Evaluation results</a><br>
+Health content from the <a href="https://www.niddk.nih.gov/">National Institute of Diabetes and Digestive and Kidney Diseases</a>, reused under its <a href="https://www.niddk.nih.gov/copyright">copyright policy</a>. Not endorsed by NIDDK.</footer>
 </main><script src="{{ request.url_for('static', path='chat.js') }}" defer></script></body></html>
