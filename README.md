@@ -1,22 +1,18 @@
 # WellQuery
 
-A health-information project for questions about common diseases and health
-conditions, with source passages shown alongside each answer.
+A health-information search app that answers questions with passages from published articles and links to the sources.
 
-**Built with:** Python, FastAPI, SQLite, BM25, and MiniLM. Optional summaries use
-Qwen through Ollama.
+![WellQuery showing a question, answer, and sources](docs/images/quick-answer.png)
 
-## From question to evidence
+## How it works
 
-1. Ask a question about the topics in the collection.
-2. Keyword and semantic search find related passages.
-3. Read the excerpts or request an optional summary, then inspect the sources.
+BM25 and MiniLM retrieve relevant passages from a SQLite collection. FastAPI serves the app. Answers use source excerpts by default; optional AI summaries run locally with Qwen through Ollama.
 
-![WellQuery answer and source passages](docs/images/quick-answer.png)
+The current collection contains 15 NIDDK articles on diabetes, kidney health, and related medicines. Other conditions are not covered yet. This is a general-information tool, not medical advice.
 
-## Try it
+## Run locally
 
-Requires Python 3.12, uv, and make.
+Requires Python 3.12, [uv](https://docs.astral.sh/uv/), and make.
 
 ```sh
 make setup
@@ -25,28 +21,12 @@ make index
 make local
 ```
 
-Open [localhost:8000](http://localhost:8000). This runs the source-excerpt version.
-For the Docker version with summaries:
+Open [localhost:8000](http://localhost:8000). Ingestion downloads the articles; indexing downloads the embedding model.
 
-```sh
-make docker
-make docker-run
-```
+For the Docker version with summaries, run `make docker` followed by `make docker-run`, then open [localhost:7860](http://localhost:7860). The build downloads model weights.
 
-Open [localhost:7860](http://localhost:7860). The first build downloads model weights.
-Run `make check` for offline tests.
+## Tests and feedback
 
-## Feedback
+Run `make check` for offline tests. Report bugs or missing topics through [GitHub issues](https://github.com/manavpreet1809/WellQuery/issues); leave out personal medical information.
 
-Found an unclear answer, a missing topic, or something that could be easier to
-use? [Open an issue](https://github.com/manavpreet1809/WellQuery/issues) with your
-feedback. Please leave out personal medical information.
-
-## Source material
-
-Answers are limited to the available articles; the current collection does not
-cover every common disease. This is a student project, not medical advice.
-
-Content comes from [NIDDK](https://www.niddk.nih.gov/) under its
-[copyright policy](https://www.niddk.nih.gov/copyright); no endorsement is implied.
-Built on my earlier MediBot project. See [attribution](ATTRIBUTION.md).
+Source material: [NIDDK](https://www.niddk.nih.gov/) ([copyright policy](https://www.niddk.nih.gov/copyright)). No endorsement is implied. Earlier project credits are in [ATTRIBUTION.md](ATTRIBUTION.md).

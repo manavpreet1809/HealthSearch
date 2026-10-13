@@ -2,13 +2,13 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>WellQuery</title>
 <meta name="description" content="Ask general questions about common diseases and health conditions, and read the available source passages.">
-<link rel="stylesheet" href="{{ request.url_for('static', path='style.css') }}?v=2"></head>
+<link rel="stylesheet" href="{{ request.url_for('static', path='style.css') }}?v=3"></head>
 <body><main>
 <header class="hero">
   <nav><a href="https://github.com/manavpreet1809/WellQuery/issues">Feedback</a></nav>
   <h1>WellQuery</h1>
-  <p class="tagline">Ask about common diseases and health conditions. Explore the sources behind each answer.</p>
-  <p class="coverage">Answers depend on the available articles; not every condition is covered.</p>
+  <p class="tagline">Health questions, answered with source passages.</p>
+  <p class="coverage">Coverage depends on the available articles.</p>
 </header>
 <p class="notice">General information only, not medical advice. In an emergency, call your local emergency number.</p>
 {% if mode != 'local' %}<p id="mode">Mode: {{ mode }}.{% if mode == 'demo' %} Scripted demo. Try “What is WellQuery?”. No health information or AI generation is active.{% else %} Requires configured Databricks endpoints and a local model.{% endif %}</p>{% endif %}
@@ -16,13 +16,13 @@
   <label for="question">Your question</label>
   <textarea id="question" maxlength="1000" required rows="2" placeholder="e.g. What are the symptoms of type 2 diabetes?"></textarea>
   {% if mode == 'local' %}<fieldset class="styles"><legend>Answer style</legend>
-    <label class="style-option"><input type="radio" name="answer-style" value="excerpts" checked><span><strong>Quick answer</strong><small>Exact sentences from the sources · instant</small></span></label>
-    <label class="style-option"><input type="radio" name="answer-style" value="ollama"><span><strong>AI summary</strong><small>Written by a small AI model · up to 1 minute</small></span></label>
+    <label class="style-option"><input type="radio" name="answer-style" value="excerpts" checked><span><strong>Quick answer</strong><small>Quoted source passages</small></span></label>
+    <label class="style-option"><input type="radio" name="answer-style" value="ollama"><span><strong>AI summary</strong><small>Optional · may take a minute</small></span></label>
   </fieldset>{% endif %}
   <button type="submit">Ask WellQuery</button>
   <p id="status" role="status"></p>
 </form>
-{% if mode == 'local' %}<div id="examples"><span>Try:</span> <button type="button" class="example">What are the symptoms of type 2 diabetes?</button> <button type="button" class="example">What is metformin used for?</button> <button type="button" class="example">What causes type 2 diabetes?</button> <button type="button" class="example">How can I keep my kidneys healthy?</button></div>{% endif %}
+{% if mode == 'local' %}<div id="examples"><span>Try:</span> <button type="button" class="example">What are the symptoms of type 2 diabetes?</button> <button type="button" class="example">What is metformin used for?</button></div>{% endif %}
 <section id="messages" aria-live="polite" aria-label="Answers"></section>
 <footer>Built by Manavpreet Singh · <a href="https://github.com/manavpreet1809/WellQuery">Source code on GitHub</a> · <a href="https://github.com/manavpreet1809/WellQuery/issues">Feedback</a><br>
 Health content from the <a href="https://www.niddk.nih.gov/">National Institute of Diabetes and Digestive and Kidney Diseases</a>, reused under its <a href="https://www.niddk.nih.gov/copyright">copyright policy</a>. Not endorsed by NIDDK.</footer>
