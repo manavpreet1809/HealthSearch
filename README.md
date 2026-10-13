@@ -1,8 +1,6 @@
 # WellQuery
 
-A health-information search app that answers questions with passages from published articles and links to the sources.
-
-![WellQuery showing a question, answer, and sources](docs/images/quick-answer.png)
+WellQuery helps users find health information in a collection of published articles. It pairs each answer with supporting passages and source links, so users can check the information in its original context.
 
 ## How it works
 
