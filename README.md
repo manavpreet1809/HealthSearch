@@ -1,7 +1,7 @@
 # WellQuery
 
-Answers general questions about diabetes and kidney health using 15 NIDDK
-articles, with source passages shown alongside each answer.
+A health-information project for questions about common diseases and health
+conditions, with source passages shown alongside each answer.
 
 **Built with:** Python, FastAPI, SQLite, BM25, and MiniLM. Optional summaries use
 Qwen through Ollama.
@@ -36,12 +36,16 @@ make docker-run
 Open [localhost:7860](http://localhost:7860). The first build downloads model weights.
 Run `make check` for offline tests.
 
-## Read the results carefully
+## Feedback
 
-This is a student project, not medical advice. Evaluation questions are still
-unreviewed. See [status](docs/STATUS.md) and [evaluation](evaluation/README.md).
+Found an unclear answer, a missing topic, or something that could be easier to
+use? [Open an issue](https://github.com/manavpreet1809/WellQuery/issues) with your
+feedback. Please leave out personal medical information.
 
 ## Source material
+
+Answers are limited to the available articles; the current collection does not
+cover every common disease. This is a student project, not medical advice.
 
 Content comes from [NIDDK](https://www.niddk.nih.gov/) under its
 [copyright policy](https://www.niddk.nih.gov/copyright); no endorsement is implied.
