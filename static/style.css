@@ -12,8 +12,8 @@
   }
 }
 * { box-sizing: border-box; }
-body { margin: 0; padding: 24px 16px; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, sans-serif; }
-main { max-width: 760px; margin: 24px auto; padding: 32px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); }
+body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font: 16px/1.45 system-ui, sans-serif; }
+main { max-width: 860px; margin: 8px auto; padding: 24px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); }
 h1, h2, h3 { font-family: var(--heading); font-weight: 600; }
 a { color: var(--link); text-underline-offset: 3px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -24,27 +24,30 @@ textarea { display: block; width: 100%; margin-top: 6px; padding: 12px; font: in
 select { width: 100%; padding: 10px; margin: 8px 0; font: inherit; }
 
 /* Chat page */
-.hero nav { text-align: right; font-size: .9rem; }
-.hero h1 { margin: 0; font-size: 2.3rem; }
-.tagline { margin: 4px 0 12px; font-size: 1.1rem; color: var(--muted); }
-.coverage { display: flex; flex-wrap: wrap; gap: 0; margin: 0 0 20px; padding: 0; list-style: none; color: var(--muted); font-size: .9rem; }
+.hero { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 16px; }
+.hero nav { grid-column: 2; grid-row: 1; text-align: right; font-size: .9rem; }
+.hero h1 { grid-column: 1; grid-row: 1; }
+.hero .tagline, .hero .coverage { grid-column: 1 / -1; }
+.hero h1 { margin: 0; font-size: 2rem; }
+.tagline { margin: 0; font-size: 1rem; color: var(--muted); }
+.coverage { display: flex; flex-wrap: wrap; gap: 0; margin: 0 0 12px; padding: 0; list-style: none; color: var(--muted); font-size: .9rem; }
 .coverage li + li::before { content: '·'; padding: 0 8px; }
-.notice { margin: 0 0 24px; border-left: 4px solid var(--accent); padding: 10px 14px; background: var(--accent-soft); font-size: .95rem; }
+.notice { margin: 0 0 14px; border-left: 4px solid var(--accent); padding: 10px 14px; background: var(--accent-soft); font-size: .95rem; }
 #mode, #status { font-size: .9rem; }
-.ask { padding: 20px; border: 1px solid var(--line); border-radius: 4px; }
-.styles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 0; padding: 0; border: 0; }
+.ask { padding: 14px; border: 1px solid var(--line); border-radius: 4px; }
+.styles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 0; padding: 0; border: 0; }
 .styles legend { margin-bottom: 6px; font-weight: 600; }
-.style-option { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; font-weight: 400; cursor: pointer; }
+.style-option { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; font-weight: 400; cursor: pointer; }
 .style-option:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
 .style-option input { margin-top: 5px; accent-color: var(--accent); }
 .style-option small { display: block; color: var(--muted); font-size: .82rem; }
-#examples { margin: 14px 0 0; color: var(--muted); font-size: .9rem; }
+#examples { margin: 8px 0 0; color: var(--muted); font-size: .9rem; }
 #examples .example { margin: 6px 6px 0 0; padding: 6px 12px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-size: .88rem; font-weight: 500; }
 #examples .example:hover { background: var(--accent-soft); }
 #examples .example { color: var(--text); border-color: var(--line); }
-.turn { margin: 28px 0; }
+.turn { margin: 18px 0; }
 .question { margin: 0 0 10px auto; width: fit-content; max-width: 85%; padding: 8px 12px; border-radius: 4px; background: var(--accent-soft); color: var(--text); font-weight: 600; overflow-wrap: anywhere; }
-.answer { padding: 18px 20px; border: 1px solid var(--line); border-radius: 4px; overflow-wrap: anywhere; }
+.answer { padding: 14px 16px; border: 1px solid var(--line); border-radius: 4px; overflow-wrap: anywhere; }
 .answer.loading { color: var(--muted); }
 .answer.loading p::before { content: ""; display: inline-block; width: .8em; height: .8em; margin-right: 10px; border: 2px solid var(--accent); border-right-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -55,7 +58,7 @@ select { width: 100%; padding: 10px; margin: 8px 0; font: inherit; }
 .claim li { margin: 2px 0; }
 .cite { display: inline-block; min-width: 1.4em; padding: 0 5px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); font-size: .8rem; font-weight: 700; text-align: center; text-decoration: none; line-height: 1.5; }
 .answer h3 { margin: 18px 0 8px; font-size: .95rem; }
-details.source { margin: 8px 0; padding: 10px 14px; background: var(--quote); border-radius: 4px; }
+details.source { margin: 6px 0; padding: 8px 12px; background: var(--quote); border-radius: 4px; }
 details.source > summary { cursor: pointer; font-weight: 600; }
 blockquote { margin: 10px 0; padding-left: 12px; border-left: 3px solid var(--accent); }
 details.passage { margin: 6px 0 10px; font-size: .9rem; }
@@ -66,7 +69,7 @@ details.passage summary { cursor: pointer; color: var(--link); }
 .refusal.urgent { background: var(--urgent-soft); color: var(--urgent); }
 .refusal.caution { background: var(--caution-soft); color: var(--caution); }
 .error { margin: 0; color: var(--urgent); }
-footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .82rem; }
+footer { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: .82rem; }
 @media (max-width: 540px) {
   body { padding: 8px; } main { padding: 18px 16px; margin: 8px auto; }
   .styles { grid-template-columns: 1fr; } .ask { padding: 14px; } .answer { padding: 14px; }
@@ -82,3 +85,8 @@ th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--line); 
 thead { background: var(--accent-soft); }
 meter { width: 70px; }
 dd { margin: 0 0 12px; overflow-wrap: anywhere; }
+
+/* Empty status messages should not reserve a blank row in the form. */
+#status:empty { display: none; }
+button { min-height: 40px; }
+textarea { min-height: 72px; }
