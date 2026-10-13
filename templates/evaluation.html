@@ -5,7 +5,7 @@
 <p class="notice">Question verification and exact quotations do not establish answer correctness or clinical safety.</p>
 {% if skipped %}<p role="status">{{ skipped }} invalid summary file(s) were skipped.</p>{% endif %}
 {% if not runs %}<h2>No evaluation runs yet</h2><p>Run <code>python -m evaluation.run --include-drafts</code> from your configured project environment. Draft results will be labeled as unverified.</p>
-{% else %}<form method="get"><label for="run">Evaluation run</label><select id="run" name="run">{% for item in runs %}<option value="{{ item.id }}" {% if item.id == selected.id %}selected{% endif %}>{{ item.id }} — {{ 'Draft' if item.draft else 'Reviewed questions' }}</option>{% endfor %}</select><button type="submit">View run</button></form>
+{% else %}<form method="get"><label for="run">Evaluation run</label><select id="run" name="run">{% for item in runs %}<option value="{{ item.id }}" {% if item.id == selected.id %}selected{% endif %}>{{ item.id }} ({{ 'draft' if item.draft else 'reviewed questions' }})</option>{% endfor %}</select><button type="submit">View run</button></form>
 <h2>{{ 'Draft development results' if selected.draft else 'Human-verified question set' }}</h2>
 <p><strong>{{ selected.verified_count }} / {{ selected.question_count }}</strong> questions verified. Answer support still requires separate human review.</p>
 <p class="source-meta">Run timestamp (UTC): {{ selected.created_at }}</p>

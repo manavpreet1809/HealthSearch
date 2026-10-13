@@ -7,11 +7,11 @@
 <header class="hero">
   <nav><a href="/evaluation">How well it works</a></nav>
   <h1>WellQuery</h1>
-  <p class="tagline">Answers about diabetes and kidney health, with the source behind every sentence.</p>
+  <p class="tagline">Ask about diabetes and kidney health. Every answer shows where it came from.</p>
   <ul class="coverage" aria-label="What WellQuery covers"><li>Diabetes</li><li>Kidney health</li><li>Diabetes medicines</li><li>15 NIDDK articles</li></ul>
 </header>
 <p class="notice">General information only, not medical advice. In an emergency, call your local emergency number.</p>
-{% if mode != 'local' %}<p id="mode">Mode: {{ mode }}.{% if mode == 'demo' %} Scripted demo — try “What is WellQuery?”. No health information or AI generation is active.{% else %} Requires configured Databricks endpoints and a local model.{% endif %}</p>{% endif %}
+{% if mode != 'local' %}<p id="mode">Mode: {{ mode }}.{% if mode == 'demo' %} Scripted demo. Try “What is WellQuery?”. No health information or AI generation is active.{% else %} Requires configured Databricks endpoints and a local model.{% endif %}</p>{% endif %}
 <form id="question-form" class="ask">
   <label for="question">Your question</label>
   <textarea id="question" maxlength="1000" required rows="2" placeholder="e.g. What are the symptoms of type 2 diabetes?"></textarea>
