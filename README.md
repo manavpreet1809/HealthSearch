@@ -6,27 +6,15 @@ articles, with source passages shown alongside each answer.
 **Built with:** Python, FastAPI, SQLite, BM25, and MiniLM. Optional summaries use
 Qwen through Ollama.
 
-## Highlights
+## From question to evidence
 
-- **Document search:** combines keyword matching and semantic search to retrieve relevant passages.
-- **Visible evidence:** displays the source text alongside excerpts or optional generated summaries.
-- **Evaluation:** compares retrieval methods using saved results and draft questions.
-
-## Preview
+1. Ask a question about the topics in the collection.
+2. Keyword and semantic search find related passages.
+3. Read the excerpts or request an optional summary, then inspect the sources.
 
 ![WellQuery answer and source passages](docs/images/quick-answer.png)
 
-## Project structure
-
-```text
-app/          API, document ingestion, search, and answering
-static/       Browser scripts and styles
-templates/    Chat and evaluation pages
-evaluation/   Evaluation and human-review tools
-tests/        Automated tests
-```
-
-## Run locally
+## Try it
 
 Requires Python 3.12, uv, and make.
 
@@ -48,10 +36,12 @@ make docker-run
 Open [localhost:7860](http://localhost:7860). The first build downloads model weights.
 Run `make check` for offline tests.
 
-## Status and sources
+## Read the results carefully
 
 This is a student project, not medical advice. Evaluation questions are still
 unreviewed. See [status](docs/STATUS.md) and [evaluation](evaluation/README.md).
+
+## Source material
 
 Content comes from [NIDDK](https://www.niddk.nih.gov/) under its
 [copyright policy](https://www.niddk.nih.gov/copyright); no endorsement is implied.
