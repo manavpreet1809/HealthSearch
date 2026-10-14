@@ -1,6 +1,6 @@
-# WellQuery
+# HealthSearch: AI Health Information Search
 
-WellQuery helps users find health information in a collection of published articles. It pairs each answer with supporting passages and source links, so users can check the information in its original context.
+HealthSearch helps users find health information in a collection of published articles. It pairs each answer with supporting passages and source links, so users can check the information in its original context.
 
 ## How it works
 
@@ -25,6 +25,6 @@ For the Docker version with summaries, run `make docker` followed by `make docke
 
 ## Tests and feedback
 
-Run `make check` for offline tests. Report bugs or missing topics through [GitHub issues](https://github.com/manavpreet1809/WellQuery/issues); leave out personal medical information.
+Run `make check` for offline tests. Report bugs or missing topics through [GitHub issues](https://github.com/manavpreet1809/HealthSearch/issues); leave out personal medical information.
 
 Source material: [NIDDK](https://www.niddk.nih.gov/) ([copyright policy](https://www.niddk.nih.gov/copyright)). No endorsement is implied. Earlier project credits are in [ATTRIBUTION.md](ATTRIBUTION.md).
